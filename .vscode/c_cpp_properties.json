@@ -10,6 +10,7 @@
             "includePath": [
                 "C:/Users/Kinda/CS4 Project/inductorstickcode/include",
                 "C:/Users/Kinda/CS4 Project/inductorstickcode/src",
+                "C:/Users/Kinda/CS4 Project/inductorstickcode/.pio/libdeps/nano_33_iot/LiquidCrystal/src",
                 "C:/Users/Kinda/CS4 Project/inductorstickcode/.pio/libdeps/nano_33_iot/DHT sensor library",
                 "C:/Users/Kinda/CS4 Project/inductorstickcode/.pio/libdeps/nano_33_iot/Adafruit Unified Sensor",
                 "C:/Users/Kinda/.platformio/packages/framework-arduino-samd/cores/arduino/api/deprecated",
@@ -37,6 +38,7 @@
                 "path": [
                     "C:/Users/Kinda/CS4 Project/inductorstickcode/include",
                     "C:/Users/Kinda/CS4 Project/inductorstickcode/src",
+                    "C:/Users/Kinda/CS4 Project/inductorstickcode/.pio/libdeps/nano_33_iot/LiquidCrystal/src",
                     "C:/Users/Kinda/CS4 Project/inductorstickcode/.pio/libdeps/nano_33_iot/DHT sensor library",
                     "C:/Users/Kinda/CS4 Project/inductorstickcode/.pio/libdeps/nano_33_iot/Adafruit Unified Sensor",
                     "C:/Users/Kinda/.platformio/packages/framework-arduino-samd/cores/arduino/api/deprecated",
@@ -65,6 +67,7 @@
                 "ARDUINO_SAMD_NANO_33_IOT",
                 "CRYSTALLESS",
                 "__SAMD21G18A__",
+                "DEBUG",
                 "ARDUINO=10805",
                 "F_CPU=48000000L",
                 "USBCON",

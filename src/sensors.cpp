@@ -1,5 +1,4 @@
-#define DEBUG
-#include <DHT.h>
+#include "sensors.h"
 
 const int dhtPin = 8;
 const int dhtType = DHT11;
@@ -40,12 +39,11 @@ bool checkAlert(bool condition, bool &alertActive, const char* message) {
   return triggered;
 }
 
-void setup() {
-  Serial.begin(9600);
+void sensorsInit() {
   dht.begin();
 }
 
-void loop() {
+void sensorsUpdate() {
   if (millis() - lastDHTRead > 2000) {
     float newTemp = dht.readTemperature();
     float newHumidity = dht.readHumidity();
@@ -85,7 +83,6 @@ void loop() {
   if (checkAlert(fallDetected, fallAlertActive, "Fall detected")) checkIn = true;
 
   if (checkIn) {
-    //add check in stuff here
     Serial.println("are you okay?");
     checkIn = false;
   }
