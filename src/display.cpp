@@ -1,3 +1,4 @@
+#include <Arduino.h>
 #include "display.h"
 #include <LiquidCrystal.h>
 #include <string.h>
@@ -47,7 +48,7 @@ void displayUpdate(unsigned long currentMillis, int temp, int humidity, int soun
     previousAnnounceMillis = currentMillis;
   }
 
-  handleAnnouncement("ANDY IS A BITCH", currentMillis);
+  handleAnnouncement("ANDY IS A HOTTIE", currentMillis);
   displayName("A VERY LONG NAME THAT SLIDES", currentMillis);
 
   displaySensors(temp, humidity, sound, currentMillis);

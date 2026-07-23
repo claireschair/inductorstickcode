@@ -1,6 +1,7 @@
 #include <Arduino.h>
 #include "sensors.h"
 #include "display.h"
+#include "imu.h"
 
 void setup() {
   Serial.begin(9600);

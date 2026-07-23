@@ -1,4 +1,6 @@
+#include <Arduino.h>
 #include "sensors.h"
+#include "imu.h"
 
 const int dhtPin = 8;
 const int dhtType = DHT11;
@@ -7,6 +9,8 @@ DHT dht(dhtPin, dhtType);
 
 const int tempThreshold = 25;
 const int humidityThreshold = 60;
+
+std::array<float, 8> ImuDataPackage;
 
 unsigned long lastDHTRead = 0;
 float temperature = 0;
@@ -41,6 +45,14 @@ bool checkAlert(bool condition, bool &alertActive, const char* message) {
 
 void sensorsInit() {
   dht.begin();
+}
+
+std::array<float, 10> SensorDataPackager(){
+  std::array<float, 10> dataPacket; 
+  std::copy(ImuDataPackage.begin(), ImuDataPacket.end(), dataPacket.begin());
+  dataPacket[8] = temperature;
+  dataPacket[9] = humidity;
+  return dataPacket;
 }
 
 void sensorsUpdate() {
