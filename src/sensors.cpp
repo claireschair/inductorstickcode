@@ -5,7 +5,8 @@ const int dhtType = DHT11;
 
 DHT dht(dhtPin, dhtType);
 
-const int tempThreshold = 25;
+const int tempMaxThreshold = 25;
+const int tempMinThreshold = 15;
 const int humidityThreshold = 60;
 
 unsigned long lastDHTRead = 0;
@@ -20,7 +21,8 @@ bool fallDetected = false;
 
 bool checkIn = false;
 
-bool tempAlertActive = false;
+bool tempHighAlertActive = false;
+bool tempLowAlertActive = false;
 bool humidityAlertActive = false;
 bool noiseAlertActive = false;
 bool fallAlertActive = false;
@@ -77,7 +79,8 @@ void sensorsUpdate() {
   }
   #endif
 
-  if (checkAlert(temperature > tempThreshold, tempAlertActive, "Temperature above threshold")) checkIn = true;
+  if (checkAlert(temperature > tempMaxThreshold, tempHighAlertActive, "Temperature above max threshold")) checkIn = true;
+  if (checkAlert(temperature < tempMinThreshold, tempLowAlertActive, "Temperature below min threshold")) checkIn = true;
   if (checkAlert(humidity > humidityThreshold, humidityAlertActive, "Humidity above threshold")) checkIn = true;
   if (checkAlert(noiseDetected, noiseAlertActive, "Noise detected")) checkIn = true;
   if (checkAlert(fallDetected, fallAlertActive, "Fall detected")) checkIn = true;
