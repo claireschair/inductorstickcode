@@ -2,6 +2,7 @@
 #define SENSORS_H
 
 #include <DHT.h>
+#include <array>
 
 extern DHT dht;
 extern float temperature;

@@ -1,6 +1,8 @@
 #include <Arduino.h>
 #include "sensors.h"
 #include "imu.h"
+#include <array>
+#include <string>
 
 const int dhtPin = 8;
 const int dhtType = DHT11;

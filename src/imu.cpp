@@ -1,6 +1,6 @@
 #include <Arduino.h>
 #include <Arduino_LSM6DS3.h>
-#include <array> 
+#include <array>
 #include "imu.h"
 
 float Gx, Gy, Gz, Ax, Ay, Az;
