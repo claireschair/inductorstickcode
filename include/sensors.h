@@ -11,5 +11,6 @@ extern bool fallDetected;
 
 void sensorsInit();
 void sensorsUpdate();
+std::array<float, 10> SensorDataPackager();
 
 #endif
