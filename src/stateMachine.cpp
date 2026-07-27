@@ -2,11 +2,11 @@
 #include "stateMachine.h"
 #include "communication.h"
 
-#define PIN_BTN_OK 2
-#define PIN_BTN_SUP 3
-#define PIN_BTN_911 4
-#define PIN_ALERT_BUZZ 5
-#define PIN_LED_ERR 6
+#define PIN_BTN_OK 9
+#define PIN_BTN_SUP 10
+#define PIN_BTN_911 11
+#define PIN_ALERT_BUZZ 12
+#define PIN_LED_ERR 13
 
 #define ST_ACTIVE 0
 #define ST_CHECKIN 1
@@ -26,6 +26,10 @@ const unsigned long CHECK_IN_INTERVAL = 900000UL;
 
 bool emergencyDialerTriggered = false;
 unsigned long lastResolvedMillis = 0;
+
+static int prevBtnOk = HIGH;
+static int prevBtnSup = HIGH;
+static int prevBtn911 = HIGH;
 
 void resolveToActive() {
   currState = ST_ACTIVE;
@@ -53,15 +57,23 @@ void StateMachineTriggerCheckIn() {
 void StateMachineUpdate() {
   unsigned long now = millis();
 
-  if (digitalRead(PIN_BTN_911) == LOW) {
+  int btnOk = digitalRead(PIN_BTN_OK);
+  int btnSup = digitalRead(PIN_BTN_SUP);
+  int btn911 = digitalRead(PIN_BTN_911);
+
+  if (btn911 == LOW && prevBtn911 == HIGH) {
     digitalWrite(PIN_ALERT_BUZZ, LOW);
     digitalWrite(PIN_LED_ERR, LOW);
     currState = ST_PANIC;
-  } else if (digitalRead(PIN_BTN_SUP) == LOW) {
+  } else if (btnSup == LOW && prevBtnSup == HIGH) {
     digitalWrite(PIN_ALERT_BUZZ, LOW);
     digitalWrite(PIN_LED_ERR, LOW);
     currState = ST_SUP_CALL;
   }
+
+  prevBtn911 = btn911;
+  prevBtnSup = btnSup;
+  prevBtnOk = btnOk;
 
   switch (currState) {
     case ST_CHECKIN:
@@ -72,7 +84,7 @@ void StateMachineUpdate() {
         break;
       }
 
-      if (digitalRead(PIN_BTN_OK) == LOW) {
+      if (btnOk == LOW && prevBtnOk == HIGH) {
         resolveToActive();
       }
       break;

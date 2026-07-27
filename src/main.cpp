@@ -12,6 +12,7 @@ unsigned long lastCheckInMillis = 0;
 
 void setup() {
   Serial.begin(9600);
+  while (!Serial && millis() < 2000);
   sensorsInit();
   displayInit();
   WifiInit();

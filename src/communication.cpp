@@ -18,17 +18,27 @@ String zone;
 bool checkIn;
 
 void WifiInit() {
-    while (WiFi.begin(SSID, Password) != WL_CONNECTED) {
-        unsigned long currentMillis = millis();
-
-        if ((currentMillis - PreviousWifiAttempt) > 100) {
-            Serial.println("Connecting to Wi-Fi...");
-            PreviousWifiAttempt = currentMillis;
+    Serial.println("Connecting to Wi-Fi...");
+    int attempts = 0;
+    while (WiFi.status() != WL_CONNECTED && attempts < 3) {
+        WiFi.begin(SSID, Password);
+        unsigned long start = millis();
+        while (millis() - start < 3000) {
+            if (WiFi.status() == WL_CONNECTED) break;
+            delay(100);
+        }
+        attempts++;
+        if (WiFi.status() != WL_CONNECTED) {
+            Serial.println("Retrying Wi-Fi connection...");
         }
     }
-    Serial.println("Connected to Wi-Fi!");
-    Serial.print("Arduino IP: ");
-    Serial.println(WiFi.localIP());
+    if (WiFi.status() == WL_CONNECTED) {
+        Serial.println("Connected to Wi-Fi!");
+        Serial.print("Arduino IP: ");
+        Serial.println(WiFi.localIP());
+    } else {
+        Serial.println("Wi-Fi connection pending. Continuing setup...");
+    }
 }
 
 void EnteredZone(String newZone) {
@@ -44,6 +54,10 @@ void EndCheckIn() {
 }
 
 void SendPacket(std::array<float, 10> sensorPacket, uint8_t id, unsigned long timeSinceLastCheckIn, String status) {
+    if (WiFi.status() != WL_CONNECTED) {
+        Serial.println("Wi-Fi not connected; unable to send packet.");
+        return;
+    }
     if (client.connect(ServerIP, port)) {
         JsonDocument packet;
         packet["id"] = id;
