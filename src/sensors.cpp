@@ -1,8 +1,8 @@
 #include <Arduino.h>
 #include "sensors.h"
 #include "imu.h"
+#include "stateMachine.h"
 #include <array>
-#include <string>
 
 const int dhtPin = 8;
 const int dhtType = DHT11;
@@ -49,6 +49,7 @@ bool checkAlert(bool condition, bool &alertActive, const char* message) {
 
 void sensorsInit() {
   dht.begin();
+  ImuInit();
 }
 
 std::array<float, 10> SensorDataPackager(){
@@ -75,6 +76,9 @@ void sensorsUpdate() {
     lastDHTRead = millis();
   }
 
+  ImuDataPackage = ImuDataUpdate();
+  fallDetected = ImuCheckFall();
+
   #ifdef DEBUG
   if (millis() - lastDebugPrint > debugInterval) {
     Serial.print("Temperature: ");
@@ -100,7 +104,7 @@ void sensorsUpdate() {
   if (checkAlert(fallDetected, fallAlertActive, "Fall detected")) checkIn = true;
 
   if (checkIn) {
-    Serial.println("are you okay?");
+    StateMachineTriggerCheckIn();
     checkIn = false;
   }
 }
