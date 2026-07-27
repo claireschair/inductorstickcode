@@ -10,6 +10,9 @@
             "includePath": [
                 "C:/Users/Kinda/CS4 Project/inductorstickcode/include",
                 "C:/Users/Kinda/CS4 Project/inductorstickcode/src",
+                "C:/Users/Kinda/CS4 Project/inductorstickcode/.pio/libdeps/nano_33_iot/WiFiNINA/src",
+                "C:/Users/Kinda/CS4 Project/inductorstickcode/.pio/libdeps/nano_33_iot/Arduino_SpiNINA/src",
+                "C:/Users/Kinda/CS4 Project/inductorstickcode/.pio/libdeps/nano_33_iot/ArduinoJson/src",
                 "C:/Users/Kinda/CS4 Project/inductorstickcode/.pio/libdeps/nano_33_iot/Arduino_LSM6DS3/src",
                 "C:/Users/Kinda/.platformio/packages/framework-arduino-samd/libraries/Wire",
                 "C:/Users/Kinda/.platformio/packages/framework-arduino-samd/libraries/SPI",
@@ -39,6 +42,9 @@
                 "path": [
                     "C:/Users/Kinda/CS4 Project/inductorstickcode/include",
                     "C:/Users/Kinda/CS4 Project/inductorstickcode/src",
+                    "C:/Users/Kinda/CS4 Project/inductorstickcode/.pio/libdeps/nano_33_iot/WiFiNINA/src",
+                    "C:/Users/Kinda/CS4 Project/inductorstickcode/.pio/libdeps/nano_33_iot/Arduino_SpiNINA/src",
+                    "C:/Users/Kinda/CS4 Project/inductorstickcode/.pio/libdeps/nano_33_iot/ArduinoJson/src",
                     "C:/Users/Kinda/CS4 Project/inductorstickcode/.pio/libdeps/nano_33_iot/Arduino_LSM6DS3/src",
                     "C:/Users/Kinda/.platformio/packages/framework-arduino-samd/libraries/Wire",
                     "C:/Users/Kinda/.platformio/packages/framework-arduino-samd/libraries/SPI",
