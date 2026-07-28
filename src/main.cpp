@@ -13,11 +13,18 @@ unsigned long lastCheckInMillis = 0;
 
 void setup() {
   Serial.begin(9600);
-  sensorsInit();
+  Serial.println("code started");
   displayInit();
+  Serial.println("display passed");
+  sensorsInit();
+  Serial.println("sensors passed");
   WifiInit();
+  Serial.println("wires passed");
   StateMachineInit();
+  Serial.println("state machine passed");
   FlashlightInit();
+  Serial.println("flashlight passed");
+  
 }
 
 void loop() {

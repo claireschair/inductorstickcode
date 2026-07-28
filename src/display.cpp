@@ -48,7 +48,7 @@ void displayUpdate(unsigned long currentMillis, int temp, int humidity, int soun
     previousAnnounceMillis = currentMillis;
   }
 
-  handleAnnouncement("ANDY IS A HOTTIE", currentMillis);
+  handleAnnouncement("ANDY NEEDS TO FIX HIS CODE", currentMillis);
   displayName("A VERY LONG NAME THAT SLIDES", currentMillis);
 
   displaySensors(temp, humidity, sound, currentMillis);
