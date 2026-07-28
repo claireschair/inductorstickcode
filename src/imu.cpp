@@ -61,35 +61,29 @@ std::array<float, 8> ImuDataUpdate() {
 
 bool ImuCheckFall() {
     std::array<float, 8> imuData = ImuDataUpdate();
+
     bool gyroDataAvailable = imuData[0] != 0.0f;
     bool accelDataAvailable = imuData[4] != 0.0f;
 
-    const float GYRO_X_THRESH = 0;
-    const float GYRO_Y_THRESH = 0;
-    const float GYRO_Z_THRESH = 0;
-    const float ACCEL_X_THRESH = 0;
-    const float ACCEL_Y_THRESH = 0;
-    const float ACCEL_Z_THRESH = 0;
+    const float GYRO_THRESH = 675.0f;   // deg/s
+    const float ACCEL_THRESH = 2.3f;    // g
 
     if (gyroDataAvailable && accelDataAvailable) {
-        if ((Gx > GYRO_X_THRESH || Gx < -GYRO_X_THRESH) && (Ax > ACCEL_X_THRESH || Ax < -ACCEL_X_THRESH)) return true;
-        if ((Gy > GYRO_Y_THRESH || Gy < -GYRO_Y_THRESH) && (Ay > ACCEL_Y_THRESH || Ay < -ACCEL_Y_THRESH)) return true;
-        if ((Gz > GYRO_Z_THRESH || Gz < -GYRO_Z_THRESH) && (Az > ACCEL_Z_THRESH || Az < -ACCEL_Z_THRESH)) return true;
-        return false;
+        float gyroMag = sqrt(Gx * Gx + Gy * Gy + Gz * Gz);
+        float accelMag = sqrt(Ax * Ax + Ay * Ay + Az * Az);
+
+        return (gyroMag > GYRO_THRESH &&
+                accelMag > ACCEL_THRESH);
     }
 
     if (gyroDataAvailable) {
-        if (Gx > GYRO_X_THRESH || Gx < -GYRO_X_THRESH) return true;
-        if (Gy > GYRO_Y_THRESH || Gy < -GYRO_Y_THRESH) return true;
-        if (Gz > GYRO_Z_THRESH || Gz < -GYRO_Z_THRESH) return true;
-        return false;
+        float gyroMag = sqrt(Gx * Gx + Gy * Gy + Gz * Gz);
+        return gyroMag > GYRO_THRESH;
     }
 
     if (accelDataAvailable) {
-        if (Ax > ACCEL_X_THRESH || Ax < -ACCEL_X_THRESH) return true;
-        if (Ay > ACCEL_Y_THRESH || Ay < -ACCEL_Y_THRESH) return true;
-        if (Az > ACCEL_Z_THRESH || Az < -ACCEL_Z_THRESH) return true;
-        return false;
+        float accelMag = sqrt(Ax * Ax + Ay * Ay + Az * Az);
+        return accelMag > ACCEL_THRESH;
     }
 
     return false;
