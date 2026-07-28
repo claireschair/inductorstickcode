@@ -26,6 +26,10 @@ const unsigned long CHECK_IN_INTERVAL = 900000UL;
 bool emergencyDialerTriggered = false;
 unsigned long lastResolvedMillis = 0;
 
+static int prevBtnOk = HIGH;
+static int prevBtnSup = HIGH;
+static int prevBtn911 = HIGH;
+
 void resolveToActive() {
   currState = ST_ACTIVE;
   EndCheckIn();
@@ -51,13 +55,21 @@ void StateMachineTriggerCheckIn() {
 void StateMachineUpdate() {
   unsigned long now = millis();
 
-  if (digitalRead(PIN_BTN_911) == LOW) {
+  int btnOk = digitalRead(PIN_BTN_OK);
+  int btnSup = digitalRead(PIN_BTN_SUP);
+  int btn911 = digitalRead(PIN_BTN_911);
+
+  if (btn911 == LOW && prevBtn911 == HIGH) {
     digitalWrite(PIN_ALERT_BUZZ, LOW);
     currState = ST_PANIC;
-  } else if (digitalRead(PIN_BTN_SUP) == LOW) {
+  } else if (btnSup == LOW && prevBtnSup == HIGH) {
     digitalWrite(PIN_ALERT_BUZZ, LOW);
     currState = ST_SUP_CALL;
   }
+
+  prevBtn911 = btn911;
+  prevBtnSup = btnSup;
+  prevBtnOk = btnOk;
 
   switch (currState) {
     case ST_CHECKIN:
@@ -68,7 +80,7 @@ void StateMachineUpdate() {
         break;
       }
 
-      if (digitalRead(PIN_BTN_OK) == LOW) {
+      if (btnOk == LOW && prevBtnOk == HIGH) {
         resolveToActive();
       }
       break;

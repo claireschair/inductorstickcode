@@ -33,9 +33,9 @@ std::array<float, 8> ImuDataUpdate() {
 
     if (IMU.gyroscopeAvailable()) {
         if (IMU.readGyroscope(Gx, Gy, Gz)) {
-            Gx += GyroOffsetX;
-            Gy += GyroOffsetY;
-            Gz += GyroOffsetZ;
+            Gx -= GyroOffsetX;
+            Gy -= GyroOffsetY;
+            Gz -= GyroOffsetZ;
             imuData[0] = 1.0f;
             imuData[1] = Gx;
             imuData[2] = Gy;
@@ -64,24 +64,27 @@ bool ImuCheckFall() {
     bool gyroDataAvailable = imuData[0] != 0.0f;
     bool accelDataAvailable = imuData[4] != 0.0f;
 
+    const float GYRO_THRESH = 100.0f;  // degrees/sec
+    const float ACCEL_THRESH = 2.5f;   // g-force
+
     if (gyroDataAvailable && accelDataAvailable) {
-        if ((Gx > 100 || Gx < -100) && (Ax > 100 || Ax < -100)) return true;
-        if ((Gy > 100 || Gy < -100) && (Ay > 100 || Ay < -100)) return true;
-        if ((Gz > 100 || Gz < -100) && (Az > 100 || Az < -100)) return true;
+        if ((Gx > GYRO_THRESH || Gx < -GYRO_THRESH) && (Ax > ACCEL_THRESH || Ax < -ACCEL_THRESH)) return true;
+        if ((Gy > GYRO_THRESH || Gy < -GYRO_THRESH) && (Ay > ACCEL_THRESH || Ay < -ACCEL_THRESH)) return true;
+        if ((Gz > GYRO_THRESH || Gz < -GYRO_THRESH) && (Az > ACCEL_THRESH || Az < -ACCEL_THRESH)) return true;
         return false;
     }
 
     if (gyroDataAvailable) {
-        if (Gx > 100 || Gx < -100) return true;
-        if (Gy > 100 || Gy < -100) return true;
-        if (Gz > 100 || Gz < -100) return true;
+        if (Gx > GYRO_THRESH || Gx < -GYRO_THRESH) return true;
+        if (Gy > GYRO_THRESH || Gy < -GYRO_THRESH) return true;
+        if (Gz > GYRO_THRESH || Gz < -GYRO_THRESH) return true;
         return false;
     }
 
     if (accelDataAvailable) {
-        if (Ax > 100 || Ax < -100) return true;
-        if (Ay > 100 || Ay < -100) return true;
-        if (Az > 100 || Az < -100) return true;
+        if (Ax > ACCEL_THRESH || Ax < -ACCEL_THRESH) return true;
+        if (Ay > ACCEL_THRESH || Ay < -ACCEL_THRESH) return true;
+        if (Az > ACCEL_THRESH || Az < -ACCEL_THRESH) return true;
         return false;
     }
 
@@ -95,18 +98,14 @@ static bool GyroCalibrate() {
     GyroOffsetX = GyroOffsetY = GyroOffsetZ = 0;
 
     for (unsigned int i = 0; i < Samples; i++) {
-        if (IMU.gyroscopeAvailable()) {
-            if (!IMU.readGyroscope(Gx, Gy, Gz)) {
-                #ifdef DEBUG
-                Serial.println("Failed to read gyroscope data!");
-                #endif
-                Errors++;
-                continue;
-            }
+        if (IMU.gyroscopeAvailable() && IMU.readGyroscope(Gx, Gy, Gz)) {
+            GyroOffsetX += Gx;
+            GyroOffsetY += Gy;
+            GyroOffsetZ += Gz;
+        } else {
+            Errors++;
         }
-        GyroOffsetX += Gx;
-        GyroOffsetY += Gy;
-        GyroOffsetZ += Gz;
+        delay(5);
     }
 
     if (Errors < Samples) {
