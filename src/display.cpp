@@ -3,7 +3,7 @@
 #include <LiquidCrystal.h>
 #include <string>
 
-const int RS = 7, EN = 6, D4 = 2, D5 = 3, D6 = 4, D7 = 5;
+const int RS = 7, EN = 6, D4 = 5, D5 = 4, D6 = 3, D7 = 2;
 LiquidCrystal lcd(RS, EN, D4, D5, D6, D7);
 
 const int SCROLL_DELAY = 500;
