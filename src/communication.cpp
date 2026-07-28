@@ -15,7 +15,7 @@ WiFiClient client;
 
 unsigned long PreviousWifiAttempt = 0;
 String zone;
-bool checkIn;
+static bool checkIn;
 
 void WifiInit() {
     while (WiFi.begin(SSID, Password) != WL_CONNECTED) {

@@ -2,11 +2,10 @@
 #include "stateMachine.h"
 #include "communication.h"
 
-#define PIN_BTN_OK 2
-#define PIN_BTN_SUP 3
-#define PIN_BTN_911 4
-#define PIN_ALERT_BUZZ 5
-#define PIN_LED_ERR 6
+#define PIN_BTN_OK 11
+#define PIN_BTN_SUP 10
+#define PIN_BTN_911 9
+#define PIN_ALERT_BUZZ A2
 
 #define ST_ACTIVE 0
 #define ST_CHECKIN 1
@@ -38,7 +37,6 @@ void StateMachineInit() {
   pinMode(PIN_BTN_SUP, INPUT_PULLUP);
   pinMode(PIN_BTN_911, INPUT_PULLUP);
   pinMode(PIN_ALERT_BUZZ, OUTPUT);
-  pinMode(PIN_LED_ERR, OUTPUT);
 
   StateMachineTriggerCheckIn();
 }
@@ -55,11 +53,9 @@ void StateMachineUpdate() {
 
   if (digitalRead(PIN_BTN_911) == LOW) {
     digitalWrite(PIN_ALERT_BUZZ, LOW);
-    digitalWrite(PIN_LED_ERR, LOW);
     currState = ST_PANIC;
   } else if (digitalRead(PIN_BTN_SUP) == LOW) {
     digitalWrite(PIN_ALERT_BUZZ, LOW);
-    digitalWrite(PIN_LED_ERR, LOW);
     currState = ST_SUP_CALL;
   }
 
@@ -90,7 +86,6 @@ void StateMachineUpdate() {
 
     case ST_UNRESPONSIVE:
       analogWrite(PIN_ALERT_BUZZ, 128);
-      digitalWrite(PIN_LED_ERR, HIGH);
 
       if (!emergencyDialerTriggered) {
         Serial.println("AT+ATD911;");
@@ -99,7 +94,6 @@ void StateMachineUpdate() {
 
       if (now - unresponsiveStart >= WAIT_30MIN) {
         digitalWrite(PIN_ALERT_BUZZ, LOW);
-        digitalWrite(PIN_LED_ERR, LOW);
         resolveToActive();
       }
       break;

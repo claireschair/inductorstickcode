@@ -25,8 +25,6 @@ const int debugInterval = 1000;
 bool noiseDetected = false;
 bool fallDetected = false;
 
-bool checkIn = false;
-
 bool tempHighAlertActive = false;
 bool tempLowAlertActive = false;
 bool humidityAlertActive = false;
@@ -61,6 +59,8 @@ std::array<float, 10> SensorDataPackager(){
 }
 
 void sensorsUpdate() {
+  bool checkIn = false;
+
   if (millis() - lastDHTRead > 2000) {
     float newTemp = dht.readTemperature();
     float newHumidity = dht.readHumidity();
