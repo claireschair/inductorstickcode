@@ -2,8 +2,10 @@
 #include <WiFiNINA.h>
 #include <ArduinoJson.h>
 #include <SPI.h>
+#include <array>
 #include "communication.h"
 #include "imu.h"
+
 
 const char* SSID = "AINSELY_WIFI_SSID";
 const char* Password = "AINSELY_WIFI_PASSWORD";
@@ -53,7 +55,7 @@ void EndCheckIn() {
     checkIn = false;
 }
 
-void SendPacket(std::array<float, 10> sensorPacket, uint8_t id, unsigned long timeSinceLastCheckIn, String status) {
+void SendPacket(const std::array<float, 10>& sensorPacket, uint8_t id, unsigned long timeSinceLastCheckIn, String status) {
     if (WiFi.status() != WL_CONNECTED) {
         Serial.println("Wi-Fi not connected; unable to send packet.");
         return;
