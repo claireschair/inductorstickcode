@@ -7,10 +7,10 @@
 #include "imu.h"
 
 
-const char* SSID = "AINSELY_WIFI_SSID";
-const char* Password = "AINSELY_WIFI_PASSWORD";
+const char* SSID = "Hive Mind";
+const char* Password = "batmanknight";
 
-const char* ServerIP = "Website IP";
+const char* ServerIP = "192.168.1.89";
 const int port = 8080;
 
 WiFiClient client;
