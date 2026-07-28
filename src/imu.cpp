@@ -64,27 +64,31 @@ bool ImuCheckFall() {
     bool gyroDataAvailable = imuData[0] != 0.0f;
     bool accelDataAvailable = imuData[4] != 0.0f;
 
-    const float GYRO_THRESH = 100.0f;  // degrees/sec
-    const float ACCEL_THRESH = 2.5f;   // g-force
+    const float GYRO_X_THRESH = 0;
+    const float GYRO_Y_THRESH = 0;
+    const float GYRO_Z_THRESH = 0;
+    const float ACCEL_X_THRESH = 0;
+    const float ACCEL_Y_THRESH = 0;
+    const float ACCEL_Z_THRESH = 0;
 
     if (gyroDataAvailable && accelDataAvailable) {
-        if ((Gx > GYRO_THRESH || Gx < -GYRO_THRESH) && (Ax > ACCEL_THRESH || Ax < -ACCEL_THRESH)) return true;
-        if ((Gy > GYRO_THRESH || Gy < -GYRO_THRESH) && (Ay > ACCEL_THRESH || Ay < -ACCEL_THRESH)) return true;
-        if ((Gz > GYRO_THRESH || Gz < -GYRO_THRESH) && (Az > ACCEL_THRESH || Az < -ACCEL_THRESH)) return true;
+        if ((Gx > GYRO_X_THRESH || Gx < -GYRO_X_THRESH) && (Ax > ACCEL_X_THRESH || Ax < -ACCEL_X_THRESH)) return true;
+        if ((Gy > GYRO_Y_THRESH || Gy < -GYRO_Y_THRESH) && (Ay > ACCEL_Y_THRESH || Ay < -ACCEL_Y_THRESH)) return true;
+        if ((Gz > GYRO_Z_THRESH || Gz < -GYRO_Z_THRESH) && (Az > ACCEL_Z_THRESH || Az < -ACCEL_Z_THRESH)) return true;
         return false;
     }
 
     if (gyroDataAvailable) {
-        if (Gx > GYRO_THRESH || Gx < -GYRO_THRESH) return true;
-        if (Gy > GYRO_THRESH || Gy < -GYRO_THRESH) return true;
-        if (Gz > GYRO_THRESH || Gz < -GYRO_THRESH) return true;
+        if (Gx > GYRO_X_THRESH || Gx < -GYRO_X_THRESH) return true;
+        if (Gy > GYRO_Y_THRESH || Gy < -GYRO_Y_THRESH) return true;
+        if (Gz > GYRO_Z_THRESH || Gz < -GYRO_Z_THRESH) return true;
         return false;
     }
 
     if (accelDataAvailable) {
-        if (Ax > ACCEL_THRESH || Ax < -ACCEL_THRESH) return true;
-        if (Ay > ACCEL_THRESH || Ay < -ACCEL_THRESH) return true;
-        if (Az > ACCEL_THRESH || Az < -ACCEL_THRESH) return true;
+        if (Ax > ACCEL_X_THRESH || Ax < -ACCEL_X_THRESH) return true;
+        if (Ay > ACCEL_Y_THRESH || Ay < -ACCEL_Y_THRESH) return true;
+        if (Az > ACCEL_Z_THRESH || Az < -ACCEL_Z_THRESH) return true;
         return false;
     }
 
