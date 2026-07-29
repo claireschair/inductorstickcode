@@ -42,9 +42,6 @@ static std::array<float, 8> ImuDataUpdate() {
             imuData[1] = Gx;
             imuData[2] = Gy;
             imuData[3] = Gz;
-            Serial.println(Gx);
-            Serial.println(Gy);
-            Serial.println(Gz);
         } else {
             std::fill_n(imuData.begin(), 4, 0.0f);
         }
@@ -56,9 +53,6 @@ static std::array<float, 8> ImuDataUpdate() {
             imuData[5] = Ax;
             imuData[6] = Ay;
             imuData[7] = Az;
-            Serial.println(Ax);
-            Serial.println(Ay);
-            Serial.println(Az);
         } else {
             std::fill_n(imuData.begin() + 4, 4, 0.0f);
         }
@@ -77,7 +71,7 @@ bool ImuCheckFall() {
 
     float gx = imuPackage[1], gy = imuPackage[2], gz = imuPackage[3];
     float ax = imuPackage[5], ay = imuPackage[6], az = imuPackage[7];
-    
+
     if (gyroDataAvailable && accelDataAvailable) {
         float gyroMag = sqrt(Gx * Gx + Gy * Gy + Gz * Gz);
         float accelMag = sqrt(Ax * Ax + Ay * Ay + Az * Az);
