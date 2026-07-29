@@ -39,8 +39,8 @@ void loop() {
   displayUpdate(currentMillis, (int)temperature, (int)humidity, 0);
 
   if (currentMillis - lastSendMillis >= SEND_INTERVAL) {
-    lastSendMillis = currentMillis;
     unsigned long timeSinceLastCheckIn = currentMillis - getLastResolvedMillis();
     SendPacket(SensorDataPackager(), DEVICE_ID, timeSinceLastCheckIn, StateMachineGetStatus());
+    lastSendMillis = millis();
   }
 }

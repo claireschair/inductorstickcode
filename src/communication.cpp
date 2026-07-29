@@ -15,7 +15,7 @@ const char *Password = "batmanknight";
 const char *ServerIP = "192.168.1.89";
 const int port = 8080;
 
-const uint8_t DEVICE_ID = 1;
+const uint8_t DEVICE_ID = 2;
 
 WiFiClient client;
 
