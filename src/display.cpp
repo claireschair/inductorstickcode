@@ -1,5 +1,6 @@
 #include <Arduino.h>
 #include "display.h"
+#include "stateMachine.h"
 #include <LiquidCrystal.h>
 #include <string>
 
@@ -50,10 +51,15 @@ void setAnnouncement(String message) {
 }
 
 void displayUpdate(unsigned long currentMillis, int temp, int humidity, int sound) {
-  if (announcementMsg.length() > 0) {
-    handleAnnouncement(announcementMsg, currentMillis);
+  if (StateMachineGetStatus() == "checkin") {
+    lcd.setCursor(0, 0);
+    lcd.print("  ARE YOU OK?   ");
+  } else {
+    if (announcementMsg.length() > 0) {
+      handleAnnouncement(announcementMsg, currentMillis);
+    }
+    displayName("A VERY LONG NAME THAT SLIDES", currentMillis);
   }
-  displayName("A VERY LONG NAME THAT SLIDES", currentMillis);
 
   displaySensors(temp, humidity, sound, currentMillis);
 }
