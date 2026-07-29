@@ -75,9 +75,8 @@ void sensorsUpdate() {
 
     lastDHTRead = millis();
   }
-
-  ImuDataPackage = ImuDataUpdate();
   fallDetected = ImuCheckFall();
+  ImuDataPackage = imuPackage;
 
   #ifdef DEBUG
   if (millis() - lastDebugPrint > debugInterval) {

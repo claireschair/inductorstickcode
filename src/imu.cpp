@@ -8,6 +8,8 @@ float GyroOffsetX, GyroOffsetY, GyroOffsetZ;
 bool ImuStatus;
 bool GyroStatus;
 
+std::array<float, 8> imuPackage;
+
 static bool GyroCalibrate();
 
 void ImuInit() {
@@ -27,7 +29,7 @@ void ImuInit() {
     }
 }
 
-std::array<float, 8> ImuDataUpdate() {
+static std::array<float, 8> ImuDataUpdate() {
     std::array<float, 8> imuData;
     imuData.fill(0);
 
@@ -60,10 +62,10 @@ std::array<float, 8> ImuDataUpdate() {
 }
 
 bool ImuCheckFall() {
-    std::array<float, 8> imuData = ImuDataUpdate();
+    imuPackage = ImuDataUpdate();
 
-    bool gyroDataAvailable = imuData[0] != 0.0f;
-    bool accelDataAvailable = imuData[4] != 0.0f;
+    bool gyroDataAvailable = imuPackage[0] != 0.0f;
+    bool accelDataAvailable = imuPackage[4] != 0.0f;
 
     const float GYRO_THRESH = 675.0f;   // deg/s
     const float ACCEL_THRESH = 2.3f;    // g
