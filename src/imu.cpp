@@ -42,6 +42,9 @@ static std::array<float, 8> ImuDataUpdate() {
             imuData[1] = Gx;
             imuData[2] = Gy;
             imuData[3] = Gz;
+            Serial.print(Gx);
+            Serial.print(Gy);
+            Serial.print(Gz);
         } else {
             std::fill_n(imuData.begin(), 4, 0.0f);
         }
@@ -53,11 +56,13 @@ static std::array<float, 8> ImuDataUpdate() {
             imuData[5] = Ax;
             imuData[6] = Ay;
             imuData[7] = Az;
+            Serial.print(Ax);
+            Serial.print(Ay);
+            Serial.print(Az);
         } else {
             std::fill_n(imuData.begin() + 4, 4, 0.0f);
         }
     }
-
     return imuData;
 }
 
@@ -86,7 +91,7 @@ bool ImuCheckFall() {
         return accelMag > ACCEL_THRESH;
     }
     else{
-        Serial.println("IMU not available")
+        Serial.println("IMU not available");
         return false;
     }
 
