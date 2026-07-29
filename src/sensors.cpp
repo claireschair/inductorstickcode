@@ -9,9 +9,9 @@ const int dhtType = DHT11;
 
 DHT dht(dhtPin, dhtType);
 
-const int tempMaxThreshold = 25;
-const int tempMinThreshold = 15;
-const int humidityThreshold = 60;
+int tempMaxThreshold = 25;
+int tempMinThreshold = 15;
+int humidityThreshold = 60;
 
 std::array<float, 8> ImuDataPackage;
 
@@ -107,4 +107,16 @@ void sensorsUpdate() {
     StateMachineTriggerCheckIn();
     checkIn = false;
   }
+}
+
+void setTempMaxThreshold(int val) {
+  tempMaxThreshold = val;
+}
+
+void setTempMinThreshold(int val) {
+  tempMinThreshold = val;
+}
+
+void setHumidityThreshold(int val) {
+  humidityThreshold = val;
 }

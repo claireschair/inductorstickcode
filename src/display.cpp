@@ -12,7 +12,6 @@ const int SENSOR_REFRESH = 1000;
 const int FLASH_COUNT = 6;
 const int SCROLL_REPEAT = 2;
 const int SCROLL_GAP = 5;
-const unsigned long ANNOUNCE_INTERVAL = 5000;
 
 enum DisplayState {
   IDLE,
@@ -21,7 +20,6 @@ enum DisplayState {
 };
 DisplayState currentState = IDLE;
 
-unsigned long previousAnnounceMillis = 0;
 unsigned long previousStateMillis = 0;
 unsigned long previousNameMillis = 0;
 unsigned long previousSensorMillis = 0;
@@ -32,23 +30,29 @@ int scrollIndex = 0;
 int scrollLoops = 0;
 int nameScrollIndex = 0;
 
+String announcementMsg = "";
+
 void triggerAnnouncement(unsigned long currentMillis);
-void handleAnnouncement(const char *message, unsigned long currentMillis);
-void displayName(const char *name, unsigned long currentMillis);
-void scrollText(const char* text, int startIndex, int textLen, int loopLen);
+void handleAnnouncement(String message, unsigned long currentMillis);
+void displayName(String name, unsigned long currentMillis);
+void scrollText(String text, int startIndex, int textLen, int loopLen);
 void displaySensors(int temp, int humidity, int sound, unsigned long currentMillis);
 
 void displayInit() {
   lcd.begin(16, 2);
 }
 
-void displayUpdate(unsigned long currentMillis, int temp, int humidity, int sound) {
-  if (currentMillis - previousAnnounceMillis >= ANNOUNCE_INTERVAL) {
-    triggerAnnouncement(currentMillis);
-    previousAnnounceMillis = currentMillis;
+void setAnnouncement(String message) {
+  if (message.length() > 0) {
+    announcementMsg = message;
+    triggerAnnouncement(millis());
   }
+}
 
-  handleAnnouncement("ANDY NEEDS TO FIX HIS CODE", currentMillis);
+void displayUpdate(unsigned long currentMillis, int temp, int humidity, int sound) {
+  if (announcementMsg.length() > 0) {
+    handleAnnouncement(announcementMsg, currentMillis);
+  }
   displayName("A VERY LONG NAME THAT SLIDES", currentMillis);
 
   displaySensors(temp, humidity, sound, currentMillis);
@@ -65,7 +69,7 @@ void triggerAnnouncement(unsigned long currentMillis) {
   }
 }
 
-void handleAnnouncement(const char *message, unsigned long currentMillis) {
+void handleAnnouncement(String message, unsigned long currentMillis) {
   if (currentState == IDLE) return;
 
   if (currentState == FLASHING) {
@@ -85,7 +89,7 @@ void handleAnnouncement(const char *message, unsigned long currentMillis) {
       }
     }
   } else if (currentState == SCROLLING) {
-    int len = strlen(message);
+    int len = message.length();
     int totalLoopLength = len + SCROLL_GAP;
 
     if (currentMillis - previousStateMillis >= SCROLL_DELAY) {
@@ -100,6 +104,7 @@ void handleAnnouncement(const char *message, unsigned long currentMillis) {
 
         if (scrollLoops >= SCROLL_REPEAT) {
           currentState = IDLE;
+          announcementMsg = "";
           nameScrollIndex = 0;
           previousNameMillis = currentMillis;
 
@@ -111,10 +116,10 @@ void handleAnnouncement(const char *message, unsigned long currentMillis) {
   }
 }
 
-void displayName(const char *name, unsigned long currentMillis) {
+void displayName(String name, unsigned long currentMillis) {
   if (currentState != IDLE) return;
 
-  int len = strlen(name);
+  int len = name.length();
 
   if (len <= 16) {
     lcd.setCursor(0, 0);
@@ -139,7 +144,7 @@ void displayName(const char *name, unsigned long currentMillis) {
   }
 }
 
-void scrollText(const char* text, int startIndex, int textLen, int loopLen) {
+void scrollText(String text, int startIndex, int textLen, int loopLen) {
   lcd.setCursor(0, 0);
   for (int i = 0; i < 16; i++) {
     int rawIndex = startIndex + i;

@@ -6,3 +6,4 @@ void StateMachineInit();
 void StateMachineUpdate();
 void StateMachineTriggerCheckIn();
 String StateMachineGetStatus();
+void setCheckInInterval(unsigned long val);
