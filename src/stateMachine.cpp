@@ -21,7 +21,11 @@ const unsigned long ACTIVE_PRINT_INTERVAL = 1000;
 
 const unsigned long TIMEOUT_5MIN = 300000UL;
 const unsigned long WAIT_30MIN = 1800000UL;
+const unsigned long ALERT_STATE_DURATION = 3000UL;
 unsigned long CHECK_IN_INTERVAL = 900000UL;
+
+unsigned long panicStart = 0;
+unsigned long supCallStart = 0;
 
 bool emergencyDialerTriggered = false;
 unsigned long lastResolvedMillis = 0;
@@ -62,9 +66,14 @@ void StateMachineUpdate() {
   if (btn911 == LOW && prevBtn911 == HIGH) {
     digitalWrite(PIN_ALERT_BUZZ, LOW);
     currState = ST_PANIC;
+    panicStart = now;
+    Serial.println("AT+ATD911;");
+    Serial.println("Sending logs and sensor telemetry to supervisor...");
   } else if (btnSup == LOW && prevBtnSup == HIGH) {
     digitalWrite(PIN_ALERT_BUZZ, LOW);
     currState = ST_SUP_CALL;
+    supCallStart = now;
+    Serial.println("AT+ATD;");
   }
 
   switch (currState) {
@@ -82,14 +91,19 @@ void StateMachineUpdate() {
       break;
 
     case ST_SUP_CALL:
-      Serial.println("AT+ATD;");
-      resolveToActive();
+      if (btnOk == LOW && prevBtnOk == HIGH) {
+        resolveToActive();
+      } else if (now - supCallStart >= ALERT_STATE_DURATION) {
+        resolveToActive();
+      }
       break;
 
     case ST_PANIC:
-      Serial.println("AT+ATD911;");
-      Serial.println("Sending logs and sensor telemetry to supervisor...");
-      resolveToActive();
+      if (btnOk == LOW && prevBtnOk == HIGH) {
+        resolveToActive();
+      } else if (now - panicStart >= ALERT_STATE_DURATION) {
+        resolveToActive();
+      }
       break;
 
     case ST_UNRESPONSIVE:
@@ -136,4 +150,8 @@ String StateMachineGetStatus() {
 
 void setCheckInInterval(unsigned long val) {
   CHECK_IN_INTERVAL = val;
+}
+
+unsigned long getLastResolvedMillis() {
+  return lastResolvedMillis;
 }

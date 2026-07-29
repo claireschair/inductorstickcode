@@ -81,7 +81,6 @@ void SendPacket(const std::array<float, 10> &sensorPacket, uint8_t id, unsigned 
     {
         JsonDocument packet;
         packet["id"] = id;
-        packet["zone"] = zone;
         packet["status"] = status;
         packet["checkingIn"] = checkIn;
         packet["timeSinceLastCheckIn"] = timeSinceLastCheckIn / 1000;
@@ -117,10 +116,6 @@ void SendPacket(const std::array<float, 10> &sensorPacket, uint8_t id, unsigned 
             accelData["y"] = nullptr;
             accelData["z"] = nullptr;
         }
-
-        JsonObject position = packet["position"].to<JsonObject>();
-        position["x"] = nullptr;
-        position["y"] = nullptr;
 
         size_t jsonSize = measureJson(packet);
 
@@ -179,7 +174,7 @@ void ReceiveServerResponse()
             }
             if (responseDoc.containsKey("checkInInterval"))
             {
-                setCheckInInterval(responseDoc["checkInInterval"].as<unsigned long>());
+                setCheckInInterval(responseDoc["checkInInterval"].as<unsigned long>() * 60000UL);
             }
             if (responseDoc.containsKey("announcement"))
             {

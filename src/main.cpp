@@ -40,7 +40,7 @@ void loop() {
 
   if (currentMillis - lastSendMillis >= SEND_INTERVAL) {
     lastSendMillis = currentMillis;
-    unsigned long timeSinceLastCheckIn = currentMillis - lastCheckInMillis;
+    unsigned long timeSinceLastCheckIn = currentMillis - getLastResolvedMillis();
     SendPacket(SensorDataPackager(), DEVICE_ID, timeSinceLastCheckIn, StateMachineGetStatus());
   }
 }
