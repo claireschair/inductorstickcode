@@ -13,5 +13,8 @@ extern bool fallDetected;
 void sensorsInit();
 void sensorsUpdate();
 std::array<float, 10> SensorDataPackager();
+void setTempMaxThreshold(int val);
+void setTempMinThreshold(int val);
+void setHumidityThreshold(int val);
 
 #endif

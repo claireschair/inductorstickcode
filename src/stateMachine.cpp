@@ -21,7 +21,7 @@ const unsigned long ACTIVE_PRINT_INTERVAL = 1000;
 
 const unsigned long TIMEOUT_5MIN = 300000UL;
 const unsigned long WAIT_30MIN = 1800000UL;
-const unsigned long CHECK_IN_INTERVAL = 900000UL;
+unsigned long CHECK_IN_INTERVAL = 900000UL;
 
 bool emergencyDialerTriggered = false;
 unsigned long lastResolvedMillis = 0;
@@ -132,4 +132,8 @@ String StateMachineGetStatus() {
     case ST_UNRESPONSIVE: return "unresponsive";
     default: return "unknown";
   }
+}
+
+void setCheckInInterval(unsigned long val) {
+  CHECK_IN_INTERVAL = val;
 }
