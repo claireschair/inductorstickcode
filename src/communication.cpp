@@ -183,6 +183,10 @@ void ReceiveServerResponse()
             {
                 setAnnouncement(responseDoc["announcement"].as<String>());
             }
+            if (responseDoc.containsKey("employeeName"))
+            {
+                setEmployeeName(responseDoc["employeeName"].as<String>());
+            }
         }
     }
 }

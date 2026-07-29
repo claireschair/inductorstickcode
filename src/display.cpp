@@ -32,6 +32,7 @@ int scrollLoops = 0;
 int nameScrollIndex = 0;
 
 String announcementMsg = "";
+String employeeName = "Employee";
 
 void triggerAnnouncement(unsigned long currentMillis);
 void handleAnnouncement(String message, unsigned long currentMillis);
@@ -50,6 +51,12 @@ void setAnnouncement(String message) {
   }
 }
 
+void setEmployeeName(String name) {
+  if (name.length() > 0) {
+    employeeName = name;
+  }
+}
+
 void displayUpdate(unsigned long currentMillis, int temp, int humidity, int sound) {
   if (StateMachineGetStatus() == "checkin") {
     lcd.setCursor(0, 0);
@@ -58,7 +65,7 @@ void displayUpdate(unsigned long currentMillis, int temp, int humidity, int soun
     if (announcementMsg.length() > 0) {
       handleAnnouncement(announcementMsg, currentMillis);
     }
-    displayName("A VERY LONG NAME THAT SLIDES", currentMillis);
+    displayName(employeeName, currentMillis);
   }
 
   displaySensors(temp, humidity, sound, currentMillis);
