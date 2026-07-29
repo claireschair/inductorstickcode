@@ -33,13 +33,13 @@ void setup() {
 void loop() {
   unsigned long currentMillis = millis();
 
-  sensorsUpdate();
   StateMachineUpdate();
   FlashlightUpdate();
   displayUpdate(currentMillis, (int)temperature, (int)humidity, 0);
 
   if (currentMillis - lastSendMillis >= SEND_INTERVAL) {
     lastSendMillis = currentMillis;
+    sensorsUpdate();
     unsigned long timeSinceLastCheckIn = currentMillis - getLastResolvedMillis();
     SendPacket(SensorDataPackager(), DEVICE_ID, timeSinceLastCheckIn, StateMachineGetStatus());
   }
