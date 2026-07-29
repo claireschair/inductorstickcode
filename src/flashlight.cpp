@@ -2,7 +2,7 @@
 #include "flashlight.h"
 
 const int flashlightPin = 12;
-const int potPin = A4;
+const int potPin = A6;
 
 void FlashlightInit() {
   pinMode(flashlightPin, OUTPUT);

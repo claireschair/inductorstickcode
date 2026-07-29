@@ -91,6 +91,7 @@ void StateMachineUpdate() {
       break;
 
     case ST_SUP_CALL:
+    Serial.println("bsupervisor button pressed");
       if (btnOk == LOW && prevBtnOk == HIGH) {
         resolveToActive();
       } else if (now - supCallStart >= ALERT_STATE_DURATION) {
@@ -99,6 +100,7 @@ void StateMachineUpdate() {
       break;
 
     case ST_PANIC:
+    Serial.println("911 button pressed");
       if (btnOk == LOW && prevBtnOk == HIGH) {
         resolveToActive();
       } else if (now - panicStart >= ALERT_STATE_DURATION) {
