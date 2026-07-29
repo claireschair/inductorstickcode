@@ -89,7 +89,7 @@ void SendPacket(const std::array<float, 10> &sensorPacket, uint8_t id, unsigned 
         sensor["temperature"] = sensorPacket[8];
         sensor["humidity"] = sensorPacket[9];
         if (sensorPacket[0] != 0 && sensorPacket[4] != 0){
-            Serial.println("Cowardly refusing to send packet because imu is offline.")
+            Serial.println("Cowardly refusing to send packet because imu is offline.");
             return;
         }
         JsonObject gyroData = packet["gyroData"].to<JsonObject>();
