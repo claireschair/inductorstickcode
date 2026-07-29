@@ -67,10 +67,6 @@ void StateMachineUpdate() {
     currState = ST_SUP_CALL;
   }
 
-  prevBtn911 = btn911;
-  prevBtnSup = btnSup;
-  prevBtnOk = btnOk;
-
   switch (currState) {
     case ST_CHECKIN:
       if (now - checkinStart >= TIMEOUT_5MIN) {
@@ -121,6 +117,10 @@ void StateMachineUpdate() {
       }
       break;
   }
+
+  prevBtn911 = btn911;
+  prevBtnSup = btnSup;
+  prevBtnOk = btnOk;
 }
 
 String StateMachineGetStatus() {

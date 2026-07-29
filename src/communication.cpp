@@ -8,6 +8,7 @@
 #include "sensors.h"
 #include "stateMachine.h"
 #include "display.h"
+
 const char *SSID = "Hive Mind";
 const char *Password = "batmanknight";
 
