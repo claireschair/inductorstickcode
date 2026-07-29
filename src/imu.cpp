@@ -86,6 +86,7 @@ bool ImuCheckFall() {
         return accelMag > ACCEL_THRESH;
     }
     else{
+        Serial.println("IMU not available")
         return false;
     }
 

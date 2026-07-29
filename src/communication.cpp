@@ -88,7 +88,9 @@ void SendPacket(const std::array<float, 10> &sensorPacket, uint8_t id, unsigned 
         JsonObject sensor = packet["sensorData"].to<JsonObject>();
         sensor["temperature"] = sensorPacket[8];
         sensor["humidity"] = sensorPacket[9];
-
+        if (sensorPacket[0] != 0 && sensorPacket[4] != 0){
+            println("Cowardly refusing to send packet because imu is offline.")
+        }
         JsonObject gyroData = packet["gyroData"].to<JsonObject>();
         if (sensorPacket[0] != 0)
         {
@@ -98,7 +100,9 @@ void SendPacket(const std::array<float, 10> &sensorPacket, uint8_t id, unsigned 
         }
         else
         {
-            return;
+            gyroData["x"] = sensorPacket[1];
+            gyroData["y"] = sensorPacket[2];
+            gyroData["z"] = sensorPacket[3];
         }
 
         JsonObject accelData = packet["accelData"].to<JsonObject>();
@@ -110,7 +114,9 @@ void SendPacket(const std::array<float, 10> &sensorPacket, uint8_t id, unsigned 
         }
         else
         {
-            return;
+            accelData["x"] = nullptr;
+            accelData["y"] = nullptr;
+            accelData["z"] = nullptr;
         }
 
         size_t jsonSize = measureJson(packet);
