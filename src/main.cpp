@@ -5,7 +5,6 @@
 #include "stateMachine.h"
 #include "flashlight.h"
 
-const uint8_t DEVICE_ID = 1;
 const unsigned long SEND_INTERVAL = 2000;
 
 unsigned long lastSendMillis = 0;
@@ -13,18 +12,22 @@ unsigned long lastCheckInMillis = 0;
 
 void setup() {
   Serial.begin(9600);
-  Serial.println("code started");
-  displayInit();
-  Serial.println("display passed");
+  Serial.println("serial started");
+
   sensorsInit();
-  Serial.println("sensors passed");
+  Serial.println("sensorsInit done");
+
+  displayInit();
+  Serial.println("displayInit done");
+
   WifiInit();
-  Serial.println("wires passed");
+  Serial.println("WifiInit done");
+
   StateMachineInit();
-  Serial.println("state machine passed");
+  Serial.println("StateMachineInit done");
+
   FlashlightInit();
-  Serial.println("flashlight passed");
-  
+  Serial.println("FlashlightInit done");
 }
 
 void loop() {

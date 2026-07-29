@@ -3,6 +3,8 @@
 #include <array>
 #include <Arduino.h>
 
+extern const uint8_t DEVICE_ID;
+
 void WifiInit();
 void EnteredZone(String newZone);
 void StartCheckIn();
