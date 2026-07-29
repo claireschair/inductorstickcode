@@ -13,6 +13,8 @@ int tempMaxThreshold = 25;
 int tempMinThreshold = 15;
 int humidityThreshold = 60;
 
+std::array<float, 8> ImuDataPackage;
+
 unsigned long lastDHTRead = 0;
 float temperature = 0;
 float humidity = 0;
@@ -50,7 +52,7 @@ void sensorsInit() {
 
 std::array<float, 10> SensorDataPackager(){
   std::array<float, 10> dataPacket;
-  std::copy(imuPackage.begin(), imuPackage.end(), dataPacket.begin());
+  std::copy(ImuDataPackage.begin(), ImuDataPackage.end(), dataPacket.begin());
   dataPacket[8] = temperature;
   dataPacket[9] = humidity;
   return dataPacket;
@@ -73,7 +75,9 @@ void sensorsUpdate() {
 
     lastDHTRead = millis();
   }
-  fallDetected = ImuCheckFall();
+
+  ImuDataPackage = ImuDataUpdate();
+  fallDetected = ImuCheckFall(ImuDataPackage);
 
   #ifdef DEBUG
   if (millis() - lastDebugPrint > debugInterval) {

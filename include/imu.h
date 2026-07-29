@@ -8,5 +8,5 @@ extern bool ImuStatus;
 extern bool GyroStatus;
 
 void ImuInit();
-extern std::array<float, 8> imuPackage;
-bool ImuCheckFall();
+std::array<float, 8> ImuDataUpdate();
+bool ImuCheckFall(const std::array<float, 8>& imuData);

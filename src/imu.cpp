@@ -8,8 +8,6 @@ float GyroOffsetX, GyroOffsetY, GyroOffsetZ;
 bool ImuStatus;
 bool GyroStatus;
 
-std::array<float, 8> imuPackage;
-
 static bool GyroCalibrate();
 
 void ImuInit() {
@@ -29,67 +27,76 @@ void ImuInit() {
     }
 }
 
-static std::array<float, 8> ImuDataUpdate() {
+std::array<float, 8> ImuDataUpdate() {
     std::array<float, 8> imuData;
     imuData.fill(0);
 
-    if (IMU.gyroscopeAvailable()) {
-        if (IMU.readGyroscope(Gx, Gy, Gz)) {
-            Gx -= GyroOffsetX;
-            Gy -= GyroOffsetY;
-            Gz -= GyroOffsetZ;
-            imuData[0] = 1.0f;
-            imuData[1] = Gx;
-            imuData[2] = Gy;
-            imuData[3] = Gz;
-        } else {
-            std::fill_n(imuData.begin(), 4, 0.0f);
+    if (GyroStatus && IMU.gyroscopeAvailable()) {
+        float rawGx, rawGy, rawGz;
+        if (IMU.readGyroscope(rawGx, rawGy, rawGz)) {
+            Gx = rawGx - GyroOffsetX;
+            Gy = rawGy - GyroOffsetY;
+            Gz = rawGz - GyroOffsetZ;
         }
     }
 
-    if (IMU.accelerationAvailable()) {
-        if (IMU.readAcceleration(Ax, Ay, Az)) {
-            imuData[4] = 1.0f;
-            imuData[5] = Ax;
-            imuData[6] = Ay;
-            imuData[7] = Az;
-        } else {
-            std::fill_n(imuData.begin() + 4, 4, 0.0f);
+    if (GyroStatus) {
+        imuData[0] = 1.0f;
+        imuData[1] = Gx;
+        imuData[2] = Gy;
+        imuData[3] = Gz;
+    }
+
+    if (ImuStatus && IMU.accelerationAvailable()) {
+        float rawAx, rawAy, rawAz;
+        if (IMU.readAcceleration(rawAx, rawAy, rawAz)) {
+            Ax = rawAx;
+            Ay = rawAy;
+            Az = rawAz;
         }
     }
+
+    if (ImuStatus) {
+        imuData[4] = 1.0f;
+        imuData[5] = Ax;
+        imuData[6] = Ay;
+        imuData[7] = Az;
+    }
+
     return imuData;
 }
 
-bool ImuCheckFall() {
-    imuPackage = ImuDataUpdate();
-
-    bool gyroDataAvailable = imuPackage[0] != 0.0f;
-    bool accelDataAvailable = imuPackage[4] != 0.0f;
+bool ImuCheckFall(const std::array<float, 8>& imuData) {
+    bool gyroDataAvailable = imuData[0] != 0.0f;
+    bool accelDataAvailable = imuData[4] != 0.0f;
 
     const float GYRO_THRESH = 675.0f;   // deg/s
     const float ACCEL_THRESH = 2.3f;    // g
 
-    float gx = imuPackage[1], gy = imuPackage[2], gz = imuPackage[3];
-    float ax = imuPackage[5], ay = imuPackage[6], az = imuPackage[7];
+    float gyroX = imuData[1];
+    float gyroY = imuData[2];
+    float gyroZ = imuData[3];
+
+    float accelX = imuData[5];
+    float accelY = imuData[6];
+    float accelZ = imuData[7];
 
     if (gyroDataAvailable && accelDataAvailable) {
-        float gyroMag = sqrt(Gx * Gx + Gy * Gy + Gz * Gz);
-        float accelMag = sqrt(Ax * Ax + Ay * Ay + Az * Az);
+        float gyroMag = sqrt(gyroX * gyroX + gyroY * gyroY + gyroZ * gyroZ);
+        float accelMag = sqrt(accelX * accelX + accelY * accelY + accelZ * accelZ);
 
         return (gyroMag > GYRO_THRESH &&
                 accelMag > ACCEL_THRESH);
     }
-    else if (gyroDataAvailable) {
-        float gyroMag = sqrt(Gx * Gx + Gy * Gy + Gz * Gz);
+
+    if (gyroDataAvailable) {
+        float gyroMag = sqrt(gyroX * gyroX + gyroY * gyroY + gyroZ * gyroZ);
         return gyroMag > GYRO_THRESH;
     }
-    else if (accelDataAvailable) {
-        float accelMag = sqrt(Ax * Ax + Ay * Ay + Az * Az);
+
+    if (accelDataAvailable) {
+        float accelMag = sqrt(accelX * accelX + accelY * accelY + accelZ * accelZ);
         return accelMag > ACCEL_THRESH;
-    }
-    else{
-        Serial.println("IMU not available");
-        return false;
     }
 
     return false;
@@ -97,34 +104,32 @@ bool ImuCheckFall() {
 
 static bool GyroCalibrate() {
     unsigned int Samples = 500;
-    unsigned int Errors = 0;
+    unsigned int collected = 0;
     Gx = Gy = Gz = 0;
     GyroOffsetX = GyroOffsetY = GyroOffsetZ = 0;
 
-    for (unsigned int i = 0; i < Samples; i++) {
+    unsigned long startMs = millis();
+    while (collected < Samples && millis() - startMs < 5000) {
         if (IMU.gyroscopeAvailable() && IMU.readGyroscope(Gx, Gy, Gz)) {
             GyroOffsetX += Gx;
             GyroOffsetY += Gy;
             GyroOffsetZ += Gz;
-        } else {
-            Errors++;
+            collected++;
         }
-        delay(5);
+        delay(2);
     }
 
-    if (Errors < Samples) {
-        GyroOffsetX /= (Samples - Errors);
-        GyroOffsetY /= (Samples - Errors);
-        GyroOffsetZ /= (Samples - Errors);
+    if (collected > 0) {
+        GyroOffsetX /= collected;
+        GyroOffsetY /= collected;
+        GyroOffsetZ /= collected;
     } else {
         Serial.println("Gyro Calibration Failed; No Data Points Available!");
         return false;
     }
 
     Serial.print("Gyroscope Calibration Completed with ");
-    Serial.print(Samples - Errors);
-    Serial.print(" data points out of ");
-    Serial.print(Samples);
-    Serial.println(" attempted samples");
+    Serial.print(collected);
+    Serial.println(" data points");
     return true;
 }
