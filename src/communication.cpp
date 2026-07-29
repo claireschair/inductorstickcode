@@ -98,9 +98,7 @@ void SendPacket(const std::array<float, 10> &sensorPacket, uint8_t id, unsigned 
         }
         else
         {
-            gyroData["x"] = nullptr;
-            gyroData["y"] = nullptr;
-            gyroData["z"] = nullptr;
+            return;
         }
 
         JsonObject accelData = packet["accelData"].to<JsonObject>();
@@ -112,9 +110,7 @@ void SendPacket(const std::array<float, 10> &sensorPacket, uint8_t id, unsigned 
         }
         else
         {
-            accelData["x"] = nullptr;
-            accelData["y"] = nullptr;
-            accelData["z"] = nullptr;
+            return;
         }
 
         size_t jsonSize = measureJson(packet);

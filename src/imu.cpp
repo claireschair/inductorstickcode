@@ -77,15 +77,16 @@ bool ImuCheckFall() {
         return (gyroMag > GYRO_THRESH &&
                 accelMag > ACCEL_THRESH);
     }
-
-    if (gyroDataAvailable) {
+    else if (gyroDataAvailable) {
         float gyroMag = sqrt(Gx * Gx + Gy * Gy + Gz * Gz);
         return gyroMag > GYRO_THRESH;
     }
-
-    if (accelDataAvailable) {
+    else if (accelDataAvailable) {
         float accelMag = sqrt(Ax * Ax + Ay * Ay + Az * Az);
         return accelMag > ACCEL_THRESH;
+    }
+    else{
+        return false;
     }
 
     return false;
