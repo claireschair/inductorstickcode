@@ -163,6 +163,7 @@ void ReceiveServerResponse()
         DeserializationError err = deserializeJson(responseDoc, client);
         if (!err)
         {
+            Serial.println("Recieved Server Response.");
             if (responseDoc.containsKey("tempMaxThreshold"))
             {
                 setTempMaxThreshold(responseDoc["tempMaxThreshold"].as<int>());
