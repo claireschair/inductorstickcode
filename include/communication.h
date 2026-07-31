@@ -11,3 +11,4 @@ void StartCheckIn();
 void EndCheckIn();
 void SendPacket(const std::array<float, 10>& sensorPacket, uint8_t id, unsigned long timeSinceLastCheckIn, String status);
 void ReceiveServerResponse();
+int getSoundDecibels();

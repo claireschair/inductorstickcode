@@ -149,6 +149,13 @@ void SendPacket(const std::array<float, 10> &sensorPacket, uint8_t id, unsigned 
     }
 }
 
+static int soundDecibels = 0;
+
+int getSoundDecibels()
+{
+    return soundDecibels;
+}
+
 void ReceiveServerResponse()
 {
     unsigned long startWait = millis();
@@ -187,6 +194,18 @@ void ReceiveServerResponse()
             if (responseDoc.containsKey("employeeName"))
             {
                 setEmployeeName(responseDoc["employeeName"].as<String>());
+            }
+            if (responseDoc.containsKey("sound"))
+            {
+                soundDecibels = responseDoc["sound"].as<int>();
+            }
+            if (responseDoc.containsKey("triggerCheckIn"))
+            {
+                if (responseDoc["triggerCheckIn"].as<bool>())
+                {
+                    Serial.println("AI explosion detection triggered check-in state via server response!");
+                    StateMachineTriggerCheckIn();
+                }
             }
         }
     }

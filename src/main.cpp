@@ -36,7 +36,7 @@ void loop() {
   sensorsUpdate();
   StateMachineUpdate();
   FlashlightUpdate();
-  displayUpdate(currentMillis, (int)temperature, (int)humidity, 0);
+  displayUpdate(currentMillis, (int)temperature, (int)humidity, getSoundDecibels());
 
   if (currentMillis - lastSendMillis >= SEND_INTERVAL) {
     unsigned long timeSinceLastCheckIn = currentMillis - getLastResolvedMillis();
